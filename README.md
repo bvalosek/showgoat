@@ -11,8 +11,16 @@ Requirements:
 
 * Node v10+
 
-Install all deps in all packages and sym-link local deps:
+Install local tooling:
 
 ```
 $ npm install
 ```
+
+Setup / wire local deps:
+
+```
+$ npm run bootstrap
+```
+
+
