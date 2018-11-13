@@ -1,10 +1,10 @@
-import { StatusAPIResponse } from '@showgoat/showgoat-common';
+import { GetStatusAPIResponse } from '@showgoat/showgoat-common';
 
 (async () => {
 
   const resp = await fetch(`https://api.showgoat.net/status`);
 
-  const body: StatusAPIResponse = await resp.json();
+  const body: GetStatusAPIResponse = await resp.json();
 
   console.log(body);
 

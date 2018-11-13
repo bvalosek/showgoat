@@ -1,7 +1,7 @@
-import { StatusAPIResponse } from "@showgoat/showgoat-common";
+import { GetStatusAPIResponse } from "@showgoat/showgoat-common";
 import { wrapAPI } from "./util";
 
-export const status = wrapAPI<StatusAPIResponse>(async () => {
+export const getStatus = wrapAPI<GetStatusAPIResponse>(async () => {
   return {
     ok: true
   };

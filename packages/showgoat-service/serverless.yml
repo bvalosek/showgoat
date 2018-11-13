@@ -35,9 +35,14 @@ package:
 functions:
 
   apiStatus:
-    handler: src/lambda/apiStatus.status
+    handler: src/lambda/apiStatus.getStatus
     events:
       - http: GET /status
+
+  apiGetShows:
+    handler: src/lambda/apiShows.getShows
+    events:
+      - http: GET /shows
 
   onViewerRequest:
     handler: src/lambda/edge.onViewerRequest
