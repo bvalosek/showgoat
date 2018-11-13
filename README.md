@@ -20,7 +20,7 @@ $ npm install
 Setup / wire local deps:
 
 ```
-$ npm run bootstrap
+$ npx lerna bootstrap
 ```
 
 
