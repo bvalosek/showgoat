@@ -1,0 +1,175 @@
+service: showgoat
+
+plugins: 
+  - serverless-domain-manager
+  - serverless-webpack
+  - serverless-plugin-cloudfront-lambda-edge
+
+custom:
+  stage: ${opt:stage, '${file(../../local.yml):stage, 'dev'}'}
+  prefix: ${self:custom.stage}-${self:service}
+  certArn: arn:aws:acm:us-east-1:404054428023:certificate/8b38b19e-fbbf-490f-9ee2-078072fba81f
+  customDomainStages:
+    prod: true
+  customDomain:
+    domainName: api.showgoat.net
+    certicateArn: ${self:custom.certArn}
+    enabled: ${self:custom.customDomainStages.${self:custom.stage}, 'false'}
+    endpointType: regional
+
+provider:
+  name: aws
+  region: us-east-1
+  stage: ${self:custom.stage}
+  runtime: nodejs8.10
+  timeout: 5
+  memorySize: 512
+  iamRoleStatements:
+    - Effect: Allow
+      Action: S3:*
+      Resource: arn:aws:s3:::${self:custom.prefix}-*
+
+package:
+  individually: true
+
+functions:
+
+  apiStatus:
+    handler: src/lambda/apiStatus.status
+    events:
+      - http: GET /status
+
+  onViewerRequest:
+    handler: src/lambda/edge.onViewerRequest
+    timeout: 1
+    memorySize: 128
+    lambdaAtEdge:
+      distribution: CloudFrontDistribution
+      eventType: viewer-request
+
+resources:
+  Description: ${self:service} - ${self:custom.stage}
+
+  Conditions:
+    IsProd: 
+      Fn::Equals: 
+        - ${self:custom.stage}
+        - prod
+
+  Resources:
+
+    # shared object storage
+
+    ContentBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.prefix}-content
+
+
+    # OAI for CloudFront to see into the ContentBucket
+
+    CloudFrontOriginAccessIdentity:
+      Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+      Condition: IsProd
+      Properties:
+        CloudFrontOriginAccessIdentityConfig:
+          Comment: ${self:service} - ${self:custom.stage}
+
+    # Policy granting the OAI access
+
+    ContentBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Condition: IsProd
+      Properties:
+        Bucket: { Ref: ContentBucket }
+        PolicyDocument:
+          Version: '2012-10-17'
+          Id: CloudfrontAccess
+          Statement:
+            - Effect: Allow
+              Principal:
+                CanonicalUser: { Fn::GetAtt: CloudFrontOriginAccessIdentity.S3CanonicalUserId }
+              Action: S3:GetObject
+              Resource:
+                Fn::Join:
+                  - ''
+                  - [ { Fn::GetAtt: ContentBucket.Arn }, '/public/*' ]
+  
+    # the CF distribution for all static content
+
+    CloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Condition: IsProd
+      Properties:
+        DistributionConfig:
+          Aliases:
+            - 'showgoat.net'
+            - 'www.showgoat.net'
+          DefaultCacheBehavior:
+            Compress: true
+            ForwardedValues:
+              QueryString: false
+            TargetOriginId: s3-content-bucket
+            ViewerProtocolPolicy: redirect-to-https
+            DefaultTTL: 0
+            MaxTTL: 0
+            MinTTL: 0
+          DefaultRootObject: index.html
+          Enabled: true
+          HttpVersion: http2
+          ViewerCertificate:
+            AcmCertificateArn: ${self:custom.certArn}
+            SslSupportMethod: sni-only
+          Origins:
+            - Id: s3-content-bucket
+              DomainName: { Fn::GetAtt: ContentBucket.DomainName }
+              OriginPath: /public/web-client
+              S3OriginConfig:
+                OriginAccessIdentity:
+                  Fn::Join:
+                    - ''
+                    - - 'origin-access-identity/cloudfront/'
+                      - { Ref: CloudFrontOriginAccessIdentity }
+
+    # alias record to point to the CF distro
+
+    Route53DNSEntry:
+      Type: AWS::Route53::RecordSetGroup
+      Condition: IsProd
+      Properties:
+        HostedZoneName: showgoat.net.
+        RecordSets:
+          - Name: 'showgoat.net'
+            Type: A
+            AliasTarget:
+              HostedZoneId: Z2FDTNDATAQYW2 # cloudfront
+              DNSName: { Fn::GetAtt: CloudFrontDistribution.DomainName }
+
+
+    # cname for www
+
+    Route53WwwDNSEntry:
+      Type: AWS::Route53::RecordSetGroup
+      Condition: IsProd
+      Properties:
+        HostedZoneName: showgoat.net.
+        RecordSets:
+          - Name: 'www.showgoat.net'
+            Type: CNAME
+            TTL: 300
+            ResourceRecords:
+              - showgoat.net
+
+    # cname for status from uptime roboto
+
+    Route53UptimeRobotDNSEntry:
+      Type: AWS::Route53::RecordSetGroup
+      Condition: IsProd
+      Properties:
+        HostedZoneName: showgoat.net.
+        RecordSets:
+          - Name: 'status.showgoat.net'
+            Type: CNAME
+            TTL: 300
+            ResourceRecords:
+              - stats.uptimerobot.com

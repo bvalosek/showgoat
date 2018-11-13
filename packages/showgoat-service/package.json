@@ -1,0 +1,22 @@
+{
+  "name": "@showgoat/showgoat-service",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "sls deploy"
+  },
+  "dependencies": {
+    "@showgoat/showgoat-common": "^0.0.0",
+    "@showgoat/showlist-austin-parser": "^0.0.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.15",
+    "serverless": "^1.32.0",
+    "serverless-domain-manager": "^2.6.6",
+    "serverless-plugin-cloudfront-lambda-edge": "^2.1.0",
+    "serverless-webpack": "^5.2.0",
+    "ts-loader": "^5.3.0",
+    "typescript": "^3.1.6",
+    "webpack": "^4.25.1"
+  }
+}

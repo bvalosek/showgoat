@@ -1,0 +1,17 @@
+{
+  "name": "@showgoat/showgoat-web-api",
+  "version": "0.0.0",
+  "private": true,
+  "browserslist": "> 5%",
+  "scripts": {
+    "build": "rm -rf {.cache,dist} && NODE_ENV=production npx parcel build src/index.html",
+    "deploy": "aws s3 sync --delete ./dist s3://prod-showgoat-content/public/web-client"
+  },
+  "dependencies": {
+    "@showgoat/showgoat-common": "^0.0.0"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.10.3",
+    "typescript": "^3.1.6"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@showgoat/showgoat-common",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@showgoat/showlist-austin-parser": "^0.0.0"
+  }
+}
