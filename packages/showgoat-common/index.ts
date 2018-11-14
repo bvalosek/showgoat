@@ -7,3 +7,7 @@ export interface GetStatusAPIResponse {
 export interface GetShowsAPIResponse {
   shows: Show[]
 }
+
+export interface GetLiveParseAPIResponse {
+  shows: Show[]
+}

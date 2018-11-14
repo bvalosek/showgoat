@@ -1,8 +1,9 @@
-// import moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import he from 'he';
 import parseArtists from './parseArtists';
 import { Parser, Show } from '../types';
 
+/** simple / first-level attempt at show parsing */
 export const basicShowParser: Parser = (partial, shows, date) => {
 
   // def cant handle lists
@@ -58,13 +59,17 @@ export const basicShowParser: Parser = (partial, shows, date) => {
   show.venue.url = venueUrl || null;
   show.venue.name = venueName || null;
 
-  // // If event name looks like a URL, put it as link instead
+  // If event name looks like a URL, put it as link instead
 
-  // let matchEventUrl = eventName ? eventName.match(/<a href="(.*)">(.*)<\/a>/) : null;
+  {
+    const match = eventName ? eventName.match(/<a href="(.*)">(.*)<\/a>/) : null;
 
-  // if (matchEventUrl) {
-  //   [ , eventUrl, eventName ] = eventUrl;
-  // }
+    if (match) {
+      const [ , eventUrl, eventName ] = match;
+      show.name = eventName;
+      show.url = eventUrl;
+    }
+  }
 
   // Attempt to find venue address
   
@@ -80,28 +85,31 @@ export const basicShowParser: Parser = (partial, shows, date) => {
     }
   }
 
-  // // pop out info
-  // let info = partial.match(/<font color="#666666">\[(.+)\]/);
+  // pop out info
 
-  // if (info) {
-  //   const text = info[1];
+  {
+    const match = partial.match(/<font color="#666666">\[(.+)\]/);
 
-  //   show.info = text.trim();
-  //   show.links = [];
+    if (match) {
+      const [ , text ] = match;
+      show.info = text.trim();
 
-  //   // try to extract time
-  //   let time = show.info.split(', ')
-  //     .map(x => x.match(/([0-9:]+(?:am|pm))/))
-  //     .map(x => x ? x[1] : null)
-  //     .filter(x => x);
+      // try to extract time
+      const time = show.info.split(', ')
+        .map(x => x.match(/([0-9:]+(?:am|pm))/))
+        .map(x => x ? x[1] : '')
+        .filter(x => x);
 
-  //   if (time.length) {
-  //     const t = moment(time, 'hh:mma');
-  //     show.date
-  //       .hour(t.hour())
-  //       .minute(t.minute());
-  //   }
-  // }
+      if (time.length) {
+        const t = moment(time, 'hh:mma');
+        show.date = moment(show.date)
+           .hour(t.hour())
+           .minute(t.minute())
+           .toDate();
+      }
+
+    }
+  }
 
   shows.push(show);
 };

@@ -1,8 +1,9 @@
 service: showgoat
 
 plugins: 
-  - serverless-domain-manager
   - serverless-webpack
+  - serverless-offline
+  - serverless-domain-manager
   - serverless-plugin-cloudfront-lambda-edge
 
 custom:
@@ -43,6 +44,11 @@ functions:
     handler: src/lambda/apiShows.getShows
     events:
       - http: GET /shows
+
+  apiGetLiveParse:
+    handler: src/lambda/apiDebug.getLiveParse
+    events:
+      - http: GET /debug/live-parse
 
   onViewerRequest:
     handler: src/lambda/edge.onViewerRequest

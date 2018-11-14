@@ -1,19 +1,6 @@
-import { Artist } from "../types";
+import { ArtistWithInfo } from "../types";
 
-interface ArtistWithInfo {
-  artist: Artist
-  info: string
-}
-
-/*
-
- Iterable that will parse a string of artists like:
-
- A, B (info), C (info), D (some, info)
-
- Needed because the above nested format isn't parsable by regex
-
-*/
+/** parse a string of artists */
 export default function* parseArtists(sArtists: string): Iterable<ArtistWithInfo>
 {
   let pCount = 0;
@@ -27,13 +14,11 @@ export default function* parseArtists(sArtists: string): Iterable<ArtistWithInfo
     if ((m = name.match(/featuring (.*)/))) {
       let names = m[1].split(' and ');
       for (let n of names) {
-        const artist: Artist = { name: n };
-        yield { artist, info };
+        yield { artist: { name: n } , info };
       }
     } else {
       if (name) {
-        const artist: Artist = { name };
-        yield { artist, info };
+        yield { artist: { name }, info };
       }
     }
 
