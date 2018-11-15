@@ -2,8 +2,9 @@
 
 ## Links
 
-* Live Application - https://showgoat.net
-* Service Status - https://status.showgoat.net
+* Deployed Application - https://showgoat.net
+* Service Uptime / Status - https://status.showgoat.net
+* Trello Board - https://trello.com/b/6AOYaqOv/v1
 
 ## Local Dev
 
