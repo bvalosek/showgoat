@@ -1,6 +1,6 @@
 service: showgoat
 
-plugins: 
+plugins:
   - serverless-webpack
   - serverless-offline
   - serverless-domain-manager
@@ -62,8 +62,8 @@ resources:
   Description: ${self:service} - ${self:custom.stage}
 
   Conditions:
-    IsProd: 
-      Fn::Equals: 
+    IsProd:
+      Fn::Equals:
         - ${self:custom.stage}
         - prod
 
@@ -76,6 +76,20 @@ resources:
       Properties:
         BucketName: ${self:custom.prefix}-content
 
+    # circle CI user
+
+    CircleDeploymentUser:
+      Type: AWS::IAM::User
+      Properties:
+        UserName: ${self:custom.prefix}-circle-ci
+        Policies:
+          - PolicyName: inline-policy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action: S3:*
+                  Resource: arn:aws:s3:::${self:custom.prefix}-*
 
     # OAI for CloudFront to see into the ContentBucket
 
@@ -105,7 +119,7 @@ resources:
                 Fn::Join:
                   - ''
                   - [ { Fn::GetAtt: ContentBucket.Arn }, '/public/*' ]
-  
+
     # the CF distribution for all static content
 
     CloudFrontDistribution:

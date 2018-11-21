@@ -2,9 +2,6 @@
   "name": "@showgoat/showgoat-service",
   "version": "0.0.0",
   "private": true,
-  "scripts": {
-    "deploy": "sls deploy"
-  },
   "dependencies": {
     "@showgoat/showgoat-common": "^0.0.0",
     "@showgoat/showlist-austin-parser": "^0.0.0",

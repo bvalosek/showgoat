@@ -1,15 +1,141 @@
-version: 2
+version: 2.1
+
+_common:
+  node-docker: &node-docker
+    - image: circleci/node:10.13.0
+  aws-docker: &aws-docker
+    - image: circleci/python:3.7.1
+  restore-bootstrap: &restore-bootstrap
+    keys: 
+      - bootstrap-v1-{{ .Branch }}-{{ .Revision }}
+      - bootstrap-v1-{{ .Branch }}
+  attach-workspace: &attach-workspace
+    at: .
+
+
 jobs:
-  build:
-    docker:
-      - image: node:10.11.0
+
+  bootstrap:
+    docker: *node-docker
     steps:
+      - restore_cache: *restore-bootstrap
       - checkout
-      - run: cd packages/showgoat-web-client && npm install
-      - run: cd packages/showgoat-web-client && npm run build
+      - run:
+          name: Bootstrap lerna
+          command: npx lerna bootstrap
+      - save_cache:
+          key: bootstrap-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - .
+  
+  web-client-build:
+    docker: *node-docker
+    steps:
+      - restore_cache: *restore-bootstrap
+      - run: 
+          name: Build client
+          command: cd packages/showgoat-web-client && npm run build
+      - run: 
+          name: Write __build.json
+          command: ./scripts/version.sh > packages/showgoat-web-client/build/__build.json
+      - persist_to_workspace:
+          root: .
+          paths:
+            - packages/showgoat-web-client/build
+
+  web-client-test:
+    docker: *node-docker
+    steps:
+      - restore_cache: *restore-bootstrap
+      - run: 
+          name: Run tests
+          command: cd packages/showgoat-web-client && npm test
+
+
+  web-client-deploy:
+    docker: *aws-docker
+    steps:
+      - attach_workspace: *attach-workspace
+      - restore_cache: *restore-bootstrap
+      - run:
+          name: Install awscli
+          command: sudo pip install awscli && aws --version
+      - run:
+          name: Deploy build output to S3
+          command: cd packages/showgoat-web-client && aws s3 sync --delete ./build s3://prod-showgoat-content/public/web-client
+
+  showlist-austin-parser-test:
+    docker: *node-docker
+    steps:
+      - restore_cache: *restore-bootstrap
+      - run: 
+          name: Run tests
+          command: cd packages/showlist-austin-parser && npm test
+
+  showgoat-service-package:
+    docker: *node-docker
+    steps:
+      - restore_cache: *restore-bootstrap
+      - run:
+          name: Package service
+          command: cd packages/showgoat-service && npx sls package --stage prod
+      - persist_to_workspace:
+          root: .
+          paths:
+            - packages/showgoat-service/.serverless
+
+  showgoat-service-deploy:
+    docker: *node-docker
+    steps:
+      - attach_workspace: *attach-workspace
+      - restore_cache: *restore-bootstrap
+      - run: 
+          name: Deploy service
+          command: cd packages/showgoat-service && ls -la
+
 
 workflows:
   version: 2
-  build:
+
+  main:
     jobs:
-      - build
+
+      # deps
+
+      - bootstrap
+
+      # frontend
+
+      - web-client-test:
+          requires: 
+            - bootstrap
+      - web-client-build:
+          requires: 
+            - bootstrap
+      - web-client-deploy:
+          filters:
+            branches:
+              only: master
+          requires: 
+            - web-client-test
+            - web-client-build
+
+      # lib
+
+      - showlist-austin-parser-test:
+          requires:
+            - bootstrap
+
+      # service
+
+      - showgoat-service-package:
+          requires: 
+            - bootstrap
+
+      - showgoat-service-deploy:
+          filters:
+            branches:
+              only: master
+          requires:
+            - showlist-austin-parser-test
+            - showgoat-service-package
