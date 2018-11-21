@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/packages/showgoat-web-client
+    docker:
+      - image: node:10.11.0
+    steps:
+      - checkout
+      - run: cd packages/showgoat-web-client && npm install
+      - run: cd packages/showgoat-web-client && npm run build
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
