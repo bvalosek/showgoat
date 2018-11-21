@@ -1,6 +1,7 @@
 # ShowGOAT Web Client
 
-[![CircleCI](https://circleci.com/gh/bvalosek/showgoat.svg?style=shield)](https://circleci.com/gh/bvalosek/showgoat)
+[![CircleCI](https://circleci.com/gh/bvalosek/showgoat.svg?style=shield&circle-token=7c646acac0c7a518309d325b24597b5d320d496b)](https://circleci.com/gh/bvalosek/showgoat)
+
 
 ## Requirements
 
