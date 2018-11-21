@@ -20,12 +20,18 @@
     "deploy": "aws s3 sync --delete ./build s3://prod-showgoat-content/public/web-client"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "sdfdsfairbnb"
   },
   "browserslist": [
     ">0.2%",
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1"
+  }
 }

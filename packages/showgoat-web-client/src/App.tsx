@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+const thing = {
+  person: 'jp',
+  name: 'jp'
+};
+
+console.log(thing);
+
 class App extends Component {
   render() {
     return (
