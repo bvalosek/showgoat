@@ -1,7 +1,6 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/packages/showgoat-web-client
     docker:
       - image: node:10.11.0
     steps:
