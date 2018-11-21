@@ -1,17 +1,31 @@
 {
-  "name": "@showgoat/showgoat-web-api",
-  "version": "0.0.0",
+  "name": "showgoat-web-client",
+  "version": "0.1.0",
   "private": true,
-  "browserslist": "> 5%",
-  "scripts": {
-    "build": "rm -rf {.cache,dist} && NODE_ENV=production npx parcel build src/index.html",
-    "deploy": "aws s3 sync --delete ./dist s3://prod-showgoat-content/public/web-client"
-  },
   "dependencies": {
-    "@showgoat/showgoat-common": "^0.0.0"
+    "@types/jest": "23.3.9",
+    "@types/node": "10.12.9",
+    "@types/react": "16.7.6",
+    "@types/react-dom": "16.0.9",
+    "react": "^16.7.0-alpha.2",
+    "react-dom": "^16.7.0-alpha.2",
+    "react-scripts": "2.1.1",
+    "typescript": "3.1.6"
   },
-  "devDependencies": {
-    "parcel-bundler": "^1.10.3",
-    "typescript": "^3.1.6"
-  }
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "deploy": "aws s3 sync --delete ./build s3://prod-showgoat-content/public/web-client"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
