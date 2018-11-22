@@ -1,5 +1,7 @@
 # ShowGOAT Web Client
 
+A music events aggregator and discovery web app augmented with Spotify API data.
+
 [![CircleCI](https://circleci.com/gh/bvalosek/showgoat.svg?style=shield&circle-token=7c646acac0c7a518309d325b24597b5d320d496b)](https://circleci.com/gh/bvalosek/showgoat)
 
 
@@ -17,6 +19,7 @@
 
 * [typescript](https://www.typescriptlang.org/) - Static type checker
 * [eslint](https://eslint.org/) - JS linter
+* [tslint](https://palantir.github.io/tslint/) - TS linter
 
 ### Build Tooling
 
