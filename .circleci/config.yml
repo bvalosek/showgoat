@@ -6,7 +6,7 @@ _common:
   aws-docker: &aws-docker
     - image: circleci/python:3.7.1
   restore-bootstrap: &restore-bootstrap
-    keys: 
+    keys:
       - bootstrap-v1-{{ .Branch }}-{{ .Revision }}
       - bootstrap-v1-{{ .Branch }}
   attach-workspace: &attach-workspace
@@ -27,15 +27,15 @@ jobs:
           key: bootstrap-v1-{{ .Branch }}-{{ .Revision }}
           paths:
             - .
-  
+
   web-client-build:
     docker: *node-docker
     steps:
       - restore_cache: *restore-bootstrap
-      - run: 
+      - run:
           name: Build client
           command: cd packages/showgoat-web-client && npm run build
-      - run: 
+      - run:
           name: Write __build.json
           command: ./scripts/version.sh > packages/showgoat-web-client/build/__build.json
       - persist_to_workspace:
@@ -47,10 +47,17 @@ jobs:
     docker: *node-docker
     steps:
       - restore_cache: *restore-bootstrap
-      - run: 
+      - run:
           name: Run tests
           command: cd packages/showgoat-web-client && npm test
 
+  web-client-coverage:
+    docker: *node-docker
+    steps:
+      - restore_cache: *restore-bootstrap
+      - run:
+          name: Run test coverage
+          command: cd packages/showgoat-web-client && npm run coverage
 
   web-client-deploy:
     docker: *aws-docker
@@ -68,7 +75,7 @@ jobs:
     docker: *node-docker
     steps:
       - restore_cache: *restore-bootstrap
-      - run: 
+      - run:
           name: Run tests
           command: cd packages/showlist-austin-parser && npm test
 
@@ -89,7 +96,7 @@ jobs:
     steps:
       - attach_workspace: *attach-workspace
       - restore_cache: *restore-bootstrap
-      - run: 
+      - run:
           name: Deploy service
           command: cd packages/showgoat-service && ls -la
 
@@ -107,16 +114,19 @@ workflows:
       # frontend
 
       - web-client-test:
-          requires: 
+          requires:
+            - bootstrap
+      - web-client-coverage:
+          requires:
             - bootstrap
       - web-client-build:
-          requires: 
+          requires:
             - bootstrap
       - web-client-deploy:
           filters:
             branches:
               only: master
-          requires: 
+          requires:
             - web-client-test
             - web-client-build
 
@@ -129,7 +139,7 @@ workflows:
       # service
 
       - showgoat-service-package:
-          requires: 
+          requires:
             - bootstrap
 
       - showgoat-service-deploy:
