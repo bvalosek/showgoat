@@ -1,4 +1,4 @@
-# ShowGOAT Web Client
+# showgoat web client
 
 A music events aggregator and discovery web app augmented with Spotify API data.
 
