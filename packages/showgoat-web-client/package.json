@@ -79,6 +79,9 @@
       "browser": true,
       "node": true
     },
+    "plugins": [
+      "tslint"
+    ],
     "settings": {
       "import/resolver": {
         "node": {
@@ -99,6 +102,53 @@
         "rules": {
           "import/prefer-default-export": 0
         }
+      },
+      {
+        "files": [
+          "*.ts",
+          "*.tsx"
+        ],
+        "rules": {
+          "tslint/config": [
+            2,
+            {
+              "rules": {
+                "no-empty-interface": 1,
+                "typedef": [
+                  true,
+                  "call-signature",
+                  "index-signature",
+                  "parameter",
+                  "property-declaration",
+                  "member-variable-declaration"
+                ],
+                "whitespace": [
+                  true,
+                  "check-type",
+                  "check-typecast",
+                  "check-type-operator"
+                ],
+                "typedef-whitespace": [
+                  true,
+                  {
+                    "call-signature": "nospace",
+                    "index-signature": "nospace",
+                    "parameter": "nospace",
+                    "property-declaration": "nospace",
+                    "variable-declaration": "nospace"
+                  },
+                  {
+                    "call-signature": "onespace",
+                    "index-signature": "onespace",
+                    "parameter": "onespace",
+                    "property-declaration": "onespace",
+                    "variable-declaration": "onespace"
+                  }
+                ]
+              }
+            }
+          ]
+        }
       }
     ]
   },
@@ -113,6 +163,8 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
+    "eslint-plugin-tslint": "^3.1.0",
+    "tslint": "^5.11.0",
     "typescript-eslint-parser": "^21.0.1"
   },
   "jest": {
