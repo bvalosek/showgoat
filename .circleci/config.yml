@@ -98,7 +98,7 @@ jobs:
       - restore_cache: *restore-bootstrap
       - run:
           name: Deploy service
-          command: cd packages/showgoat-service && npx sls deploy --changeset --stage prod
+          command: cd packages/showgoat-service && npx sls deploy --changeset --stage prod -p .serverless
 
 
 workflows:
