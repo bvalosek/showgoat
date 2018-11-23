@@ -5,6 +5,7 @@ plugins:
   - serverless-offline
   - serverless-domain-manager
   - serverless-plugin-cloudfront-lambda-edge
+  - serverless-cloudformation-changesets
 
 custom:
   stage: ${opt:stage, '${file(../../local.yml):stage, 'dev'}'}

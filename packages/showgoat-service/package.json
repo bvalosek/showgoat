@@ -11,6 +11,7 @@
     "@types/aws-lambda": "^8.10.15",
     "@types/node-fetch": "^2.1.2",
     "serverless": "^1.32.0",
+    "serverless-cloudformation-changesets": "0.0.2",
     "serverless-domain-manager": "^2.6.6",
     "serverless-offline": "^3.31.3",
     "serverless-plugin-cloudfront-lambda-edge": "^2.1.0",
