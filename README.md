@@ -11,13 +11,7 @@ Requirements:
 
 * Node v10+
 
-Install local tooling:
-
-```
-$ npm install
-```
-
-Setup / wire local deps:
+Setup / wire local deps and install all 3rd party deps:
 
 ```
 $ npx lerna bootstrap
