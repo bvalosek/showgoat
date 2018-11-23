@@ -98,7 +98,7 @@ jobs:
       - restore_cache: *restore-bootstrap
       - run:
           name: Deploy service
-          command: cd packages/showgoat-service && ls -la
+          command: cd packages/showgoat-service && npx sls deploy --changeset --stage prod
 
 
 workflows:
@@ -142,10 +142,10 @@ workflows:
           requires:
             - bootstrap
 
-      # - showgoat-service-deploy:
-      #     filters:
-      #       branches:
-      #         only: master
-      #     requires:
-      #       - showlist-austin-parser-test
-      #       - showgoat-service-package
+      - showgoat-service-deploy:
+          filters:
+            branches:
+              only: master
+          requires:
+            - showlist-austin-parser-test
+            - showgoat-service-package
