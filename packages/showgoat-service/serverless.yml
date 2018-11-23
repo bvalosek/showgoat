@@ -102,6 +102,9 @@ resources:
                 - Effect: Allow
                   Action: CloudFormation:CreateChangeSet
                   Resource: '*'
+                - Effect: Allow
+                  Action: apigateway:GET
+                  Resource: arn:aws:apigateway:us-east-1::/domainnames/api.showgoat.net
 
     # OAI for CloudFront to see into the ContentBucket
 
