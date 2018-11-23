@@ -99,6 +99,9 @@ resources:
                 - Effect: Allow
                   Action: S3:*
                   Resource: arn:aws:s3:::${self:custom.prefix}-*
+                - Effect: Allow
+                  Action: CloudFormation:CreateChangeSet
+                  Resource: '*'
 
     # OAI for CloudFront to see into the ContentBucket
 
