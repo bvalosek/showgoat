@@ -87,14 +87,34 @@ resources:
             PolicyDocument:
               Version: '2012-10-17'
               Statement:
+
+                - Effect: Allow
+                  Action: S3:ListBucket
+                  Resource: '*'
+
                 - Effect: Allow
                   Action: S3:*
-                  Resource: arn:aws:s3:::${self:custom.prefix}-*
+                  Resource:
+                    - arn:aws:s3:::${self:custom.prefix}-*
+                    - Fn::Join:
+                      - ''
+                      - - { Fn::GetAtt: 'ServerlessDeploymentBucket.Arn' }
+                        - '*'
+
                 - Effect: Allow
                   Action: CloudFormation:CreateChangeSet
                   Resource: '*'
                 - Effect: Allow
                   Action: CloudFormation:DescribeStacks
+                  Resource: '*'
+                - Effect: Allow
+                  Action: CloudFormation:DescribeStackResources
+                  Resource: '*'
+                - Effect: Allow
+                  Action: CloudFormation:DescribeStackResource
+                  Resource: '*'
+                - Effect: Allow
+                  Action: CloudFormation:ValidateTemplate
                   Resource: '*'
 
     # OAI for CloudFront to see into the ContentBucket
