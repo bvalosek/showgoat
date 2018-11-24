@@ -148,10 +148,10 @@ workflows:
           requires:
             - bootstrap
 
-      # - showgoat-service-deploy:
-      #     filters:
-      #       branches:
-      #         only: master
-      #     requires:
-      #       - showlist-austin-parser-test
-      #       - showgoat-service-package
+      - showgoat-service-deploy:
+          filters:
+            branches:
+              only: master
+          requires:
+            - showlist-austin-parser-test
+            - showgoat-service-package
