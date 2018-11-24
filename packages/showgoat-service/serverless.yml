@@ -3,21 +3,12 @@ service: showgoat
 plugins:
   - serverless-webpack
   - serverless-offline
-  - serverless-domain-manager
   - serverless-plugin-cloudfront-lambda-edge
   - serverless-cloudformation-changesets
 
 custom:
   stage: ${opt:stage, '${file(../../local.yml):stage, 'dev'}'}
   prefix: ${self:custom.stage}-${self:service}
-  certArn: arn:aws:acm:us-east-1:404054428023:certificate/8b38b19e-fbbf-490f-9ee2-078072fba81f
-  customDomainStages:
-    prod: true
-  customDomain:
-    domainName: api.showgoat.net
-    certicateArn: ${self:custom.certArn}
-    enabled: ${self:custom.customDomainStages.${self:custom.stage}, 'false'}
-    endpointType: regional
 
 provider:
   name: aws
@@ -155,7 +146,7 @@ resources:
           Enabled: true
           HttpVersion: http2
           ViewerCertificate:
-            AcmCertificateArn: ${self:custom.certArn}
+            AcmCertificateArn: { Ref: SSLCert }
             SslSupportMethod: sni-only
           Origins:
             - Id: s3-content-bucket
@@ -168,7 +159,27 @@ resources:
                     - - 'origin-access-identity/cloudfront/'
                       - { Ref: CloudFrontOriginAccessIdentity }
 
-    # alias record to point to the CF distro
+    # https
+
+    SSLCert:
+      Type: AWS::CertificateManager::Certificate
+      Condition: IsProd
+      Properties:
+        DomainName: showgoat.net
+        ValidationMethod: DNS
+        SubjectAlternativeNames:
+          - '*.showgoat.net'
+
+    # custom domain for api gateway
+
+    # APIDomainName:
+    #   Type: AWS::ApiGateway::DomainName
+    #   Condition: IsProd
+    #   Properties:
+    #     CertificateArn: { Ref: SSLCert }
+    #     DomainName: api.showgoat.net
+
+    # all dns entries
 
     Route53DNSEntry:
       Type: AWS::Route53::RecordSetGroup
@@ -176,37 +187,23 @@ resources:
       Properties:
         HostedZoneName: showgoat.net.
         RecordSets:
-          - Name: 'showgoat.net'
+          - Name: showgoat.net
             Type: A
             AliasTarget:
               HostedZoneId: Z2FDTNDATAQYW2 # cloudfront
               DNSName: { Fn::GetAtt: CloudFrontDistribution.DomainName }
-
-
-    # cname for www
-
-    Route53WwwDNSEntry:
-      Type: AWS::Route53::RecordSetGroup
-      Condition: IsProd
-      Properties:
-        HostedZoneName: showgoat.net.
-        RecordSets:
-          - Name: 'www.showgoat.net'
-            Type: CNAME
-            TTL: 300
-            ResourceRecords:
-              - showgoat.net
-
-    # cname for status from uptime roboto
-
-    Route53UptimeRobotDNSEntry:
-      Type: AWS::Route53::RecordSetGroup
-      Condition: IsProd
-      Properties:
-        HostedZoneName: showgoat.net.
-        RecordSets:
-          - Name: 'status.showgoat.net'
-            Type: CNAME
-            TTL: 300
-            ResourceRecords:
-              - stats.uptimerobot.com
+          # - Name: www.showgoat.net
+          #   Type: CNAME
+          #   TTL: 300
+          #   ResourceRecords:
+          #     - showgoat.net
+          # - Name: api.showgoat.net
+          #   Type: A
+          #   AliasTarget:
+          #     HostedZoneId: Z2FDTNDATAQYW2 # cloudfront
+          #     DNSName: { Fn::GetAtt: APIDomainName.DistributionDomainName }
+          # - Name: status.showgoat.net
+          #   Type: CNAME
+          #   TTL: 300
+          #   ResourceRecords:
+          #     - stats.uptimerobot.com

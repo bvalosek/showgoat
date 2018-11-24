@@ -2,6 +2,9 @@
   "name": "@showgoat/showgoat-service",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "tsc:check": "tsc --noEmit -p ."
+  },
   "dependencies": {
     "@showgoat/showgoat-common": "^0.0.0",
     "@showgoat/showlist-austin-parser": "^0.0.0",
@@ -12,7 +15,6 @@
     "@types/node-fetch": "^2.1.2",
     "serverless": "^1.32.0",
     "serverless-cloudformation-changesets": "0.0.2",
-    "serverless-domain-manager": "^2.6.6",
     "serverless-offline": "^3.31.3",
     "serverless-plugin-cloudfront-lambda-edge": "^2.1.0",
     "serverless-webpack": "^5.2.0",

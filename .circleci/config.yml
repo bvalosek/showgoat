@@ -76,6 +76,9 @@ jobs:
     steps:
       - restore_cache: *restore-bootstrap
       - run:
+          name: Validate TypeScript
+          command: cd packages/showlist-austin-parser && npm run tsc:check
+      - run:
           name: Run tests
           command: cd packages/showlist-austin-parser && npm test
 
@@ -83,6 +86,9 @@ jobs:
     docker: *node-docker
     steps:
       - restore_cache: *restore-bootstrap
+      - run:
+          name: Validate TypeScript
+          command: cd packages/showgoat-service && npm run tsc:check
       - run:
           name: Package service
           command: cd packages/showgoat-service && npx sls package --stage prod

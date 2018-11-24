@@ -4,6 +4,7 @@
   "private": true,
   "main": "src/index.ts",
   "scripts": {
+    "tsc:check": "tsc --noEmit -p .",
     "test": "jest",
     "test:watch": "jest --watch"
   },
