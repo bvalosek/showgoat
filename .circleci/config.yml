@@ -97,7 +97,7 @@ jobs:
           paths:
             - packages/showgoat-service/.serverless
 
-  showgoat-service-deploy:
+  showgoat-service-create-changeset:
     docker: *node-docker
     steps:
       - attach_workspace: *attach-workspace
@@ -148,7 +148,7 @@ workflows:
           requires:
             - bootstrap
 
-      - showgoat-service-deploy:
+      - showgoat-service-create-changeset:
           filters:
             branches:
               only: master
