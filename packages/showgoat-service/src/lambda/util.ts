@@ -1,11 +1,11 @@
-import { APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda';
+import { APIGatewayProxyResult, APIGatewayProxyHandler, APIGatewayProxyEvent } from 'aws-lambda';
 
 /** a function that handles the api gateway event and returns the response */
-type APIHandler<T extends object> = (APIGatewayProxyEvent) => Promise<T>;
+type APIHandler<T extends object> = (event: APIGatewayProxyEvent) => Promise<T>;
 
 
 /** create the api gateway response from a response object  */
-function createResponse (body: object | null, statusCode: number = 200): APIGatewayProxyResult 
+function createResponse (body: object | null, statusCode: number = 200): APIGatewayProxyResult
 {
   return {
     statusCode,
