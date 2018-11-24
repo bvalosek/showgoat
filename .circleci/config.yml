@@ -82,13 +82,25 @@ jobs:
           name: Run tests
           command: cd packages/showlist-austin-parser && npm test
 
-  showgoat-service-package:
+  showgoat-service-test:
     docker: *node-docker
     steps:
       - restore_cache: *restore-bootstrap
       - run:
           name: Validate TypeScript
           command: cd packages/showgoat-service && npm run tsc:check
+      - run:
+          name: Run tests
+          command: cd packages/showgoat-service && npm test
+      - persist_to_workspace:
+          root: .
+          paths:
+            - packages/showgoat-service/.serverless
+
+  showgoat-service-package:
+    docker: *node-docker
+    steps:
+      - restore_cache: *restore-bootstrap
       - run:
           name: Package service
           command: cd packages/showgoat-service && npx sls package --stage prod
@@ -144,6 +156,9 @@ workflows:
 
       # service
 
+      - showgoat-service-test:
+          requires:
+            - bootstrap
       - showgoat-service-package:
           requires:
             - bootstrap
@@ -155,3 +170,4 @@ workflows:
           requires:
             - showlist-austin-parser-test
             - showgoat-service-package
+            - showgoat-service-test
