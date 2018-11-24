@@ -111,7 +111,7 @@ jobs:
       - attach_workspace: *attach-workspace
       - restore_cache: *restore-bootstrap
       - run:
-          name: Deploy service
+          name: Create CloudFormation changeset
           command: cd packages/showgoat-service && npx sls deploy --changeset --stage prod -p .serverless
 
 
