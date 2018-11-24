@@ -93,9 +93,6 @@ resources:
                 - Effect: Allow
                   Action: CloudFormation:CreateChangeSet
                   Resource: '*'
-                - Effect: Allow
-                  Action: apigateway:GET
-                  Resource: arn:aws:apigateway:us-east-1::/domainnames/api.showgoat.net
 
     # OAI for CloudFront to see into the ContentBucket
 
@@ -172,12 +169,22 @@ resources:
 
     # custom domain for api gateway
 
-    # APIDomainName:
-    #   Type: AWS::ApiGateway::DomainName
-    #   Condition: IsProd
-    #   Properties:
-    #     CertificateArn: { Ref: SSLCert }
-    #     DomainName: api.showgoat.net
+    APIDomainName:
+      Type: AWS::ApiGateway::DomainName
+      Condition: IsProd
+      Properties:
+        CertificateArn: { Ref: SSLCert }
+        DomainName: api.showgoat.net
+
+    # api gateway basepath mapping
+
+    APIMapping:
+      Type: AWS::ApiGateway::BasePathMapping
+      Condition: IsProd
+      Properties:
+        DomainName: api.showgoat.net
+        RestApiId: { Ref: ApiGatewayRestApi } # created from serverless
+        Stage: ${self:custom.stage}
 
     # all dns entries
 
@@ -192,18 +199,18 @@ resources:
             AliasTarget:
               HostedZoneId: Z2FDTNDATAQYW2 # cloudfront
               DNSName: { Fn::GetAtt: CloudFrontDistribution.DomainName }
-          # - Name: www.showgoat.net
-          #   Type: CNAME
-          #   TTL: 300
-          #   ResourceRecords:
-          #     - showgoat.net
-          # - Name: api.showgoat.net
-          #   Type: A
-          #   AliasTarget:
-          #     HostedZoneId: Z2FDTNDATAQYW2 # cloudfront
-          #     DNSName: { Fn::GetAtt: APIDomainName.DistributionDomainName }
-          # - Name: status.showgoat.net
-          #   Type: CNAME
-          #   TTL: 300
-          #   ResourceRecords:
-          #     - stats.uptimerobot.com
+          - Name: www.showgoat.net
+            Type: CNAME
+            TTL: 300
+            ResourceRecords:
+              - showgoat.net
+          - Name: status.showgoat.net
+            Type: CNAME
+            TTL: 300
+            ResourceRecords:
+              - stats.uptimerobot.com
+          - Name: api.showgoat.net
+            Type: A
+            AliasTarget:
+              HostedZoneId: Z2FDTNDATAQYW2 # cloudfront
+              DNSName: { Fn::GetAtt: APIDomainName.DistributionDomainName }
