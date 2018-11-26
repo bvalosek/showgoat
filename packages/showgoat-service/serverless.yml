@@ -42,6 +42,11 @@ functions:
     events:
       - http: GET /debug/live-parse
 
+  apiGetLivePartials:
+    handler: src/lambda/apiDebug.getLivePartials
+    events:
+      - http: GET /debug/live-partials
+
   onViewerRequest:
     handler: src/lambda/edge.onViewerRequest
     timeout: 1

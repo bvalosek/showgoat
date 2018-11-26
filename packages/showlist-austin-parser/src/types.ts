@@ -27,3 +27,8 @@ export interface Show {
 export interface Parser {
   (partialHtml: string, out__shows: Show[], date: Moment): void
 }
+
+export interface PartialList {
+  date: Moment
+  partials: string[]
+}

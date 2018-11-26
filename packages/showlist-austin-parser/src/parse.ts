@@ -1,6 +1,6 @@
-import { Show, Parser } from './types';
+import { Show, Parser, PartialList } from './types';
 import cheerio from 'cheerio';
-import moment from 'moment-timezone';
+import moment, { Moment } from 'moment-timezone';
 import { basicShowParser } from './parsers/basicShowParser';
 
 const parsers: Parser[] = [
@@ -52,7 +52,11 @@ function htmlPartialsFromHeader($header: Cheerio): string[]
     .filter(s => s && s !== '\n');
 }
 
-export function* parse(html: string): Iterable<Show>
+/**
+ * Extract all HTML partials (chunks of HTML corresponding to a single show on
+ * a specific date) from source HTML
+ */
+export function* getPartials(html: string): Iterable<PartialList>
 {
   const $ = cheerio.load(html);
 
@@ -61,6 +65,16 @@ export function* parse(html: string): Iterable<Show>
   for (const $header of iter($, $dateHeaders)) {
     const date = dateFromHeader($header);
     const partials = htmlPartialsFromHeader($header);
+    yield { date, partials };
+  }
+}
+
+/**
+ * Extract all shows from source HTML
+ */
+export function* parse(html: string): Iterable<Show>
+{
+  for (const { date, partials } of getPartials(html)) {
 
     let showCount = 0;
 
@@ -79,5 +93,4 @@ export function* parse(html: string): Iterable<Show>
       console.warn(`WARNING: scraped ${date.toString()}, only found ${showCount} / ${partials.length} shows`);
     }
   }
-
 }
