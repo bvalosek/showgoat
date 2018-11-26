@@ -30,4 +30,22 @@ describe('basicShowParser', () => {
 
   });
 
+  it('should parse simple shows', () => {
+    const html = `
+      Gold Leather, Blood, Cheap Wave at <a href="http://www.hotelvegasaustin.com/" target="_blank"><b>Hotel Vegas</b></a> (1500 E. 6th St.) [<a href="cgi/genpage.cgi?venue=hotelvegas" title="list by venue">+</a>] <font color="#666666">[9pm, <a href="https://www.facebook.com/events/2066107773699232/" target="_blank">fb</a>]</font>
+    `;
+
+    const shows: Show[] = [];
+    const date = moment('2018-01-01');
+    basicShowParser(html, shows, date);
+
+    expect(shows.length).toEqual(1);
+
+    const [ show ] = shows;
+
+    expect(show.artists.length).toEqual(3);
+    expect(show.venue.name).toEqual('Hotel Vegas');
+
+  });
+
 });

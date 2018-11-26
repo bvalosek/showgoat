@@ -6,7 +6,7 @@
   "scripts": {
     "tsc:check": "tsc --noEmit -p .",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch --verbose"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",

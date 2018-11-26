@@ -13,14 +13,14 @@ function dateFromHeader($header: Cheerio): moment.Moment
 
   if (!match) {
     throw new Error(`Unable to parse date header: ${$header.html()}`);
-  }  
+  }
 
   const [ , month, date, year ] = match;
   const m = moment.tz(`${month} ${date} ${year}`, 'MMMM DD YYYY', 'America/Chicago');
   return m;
 }
 
-function* iter($: CheerioStatic, $sel: Cheerio): Iterable<Cheerio> 
+function* iter($: CheerioStatic, $sel: Cheerio): Iterable<Cheerio>
 {
   for (const el of $sel.toArray()) {
     yield $(el);
@@ -31,7 +31,7 @@ function htmlPartialsFromHeader($header: Cheerio): string[]
 {
   const $contents = $header.next('table').find('tr td');
 
-  let html = $contents.html();  
+  let html = $contents.html();
 
   if (!html) {
 

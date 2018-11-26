@@ -6,29 +6,11 @@ import { Parser, Show } from '../types';
 /** simple / first-level attempt at show parsing */
 export const basicShowParser: Parser = (partial, shows, date) => {
 
-  // def cant handle lists
-
-  if (/<ul/.test(partial)) {
-    return;
-  }
-
-  // basic parser cannot handle shit starting with html (multi shows, sxsw,
-  // etc) unless its a basic single line show from sxsw with a checkbox
-
-  {
-    const reSingleCheck = /<h4><input type="checkbox"[^>]+>/;
-    if (reSingleCheck.test(partial)) {
-      partial = partial.replace(reSingleCheck, '');
-    }
-    else if (partial[0] === '<') {
-      return;
-    }
-  }
-
   // generic shape
 
   const basics = partial.match(
-    /(?:(.*) with )?(.*) at (?:the )?<a href="([^"]*)">(?:<b>)?([^<]*)(?:<\/b>)?<\/a>/);
+    /(?:(.*) with )?(.*) at (?:the)?\s*<a href="([^"]*)"[^>]*>(?:<b>)?([^<]*)(?:<\/b>)?<\/a>/
+  );
 
   if (!basics) {
     return;
@@ -72,7 +54,7 @@ export const basicShowParser: Parser = (partial, shows, date) => {
   }
 
   // Attempt to find venue address
-  
+
   {
     let venueAddress = partial.match(/span title="([^"]+)"/);
 
