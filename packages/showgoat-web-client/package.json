@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/core": "7.1.0",
+    "@reach/router": "^1.2.1",
     "@svgr/webpack": "2.4.1",
     "@types/jest": "23.3.9",
     "@types/node": "10.12.9",
@@ -161,6 +162,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@types/reach__router": "^1.2.2",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
