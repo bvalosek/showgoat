@@ -63,6 +63,14 @@ functions:
       distribution: CloudFrontDistribution
       eventType: origin-response
 
+  onOriginRequest:
+    handler: src/lambda/edge.onOriginRequest
+    timeout: 1
+    memorySize: 128
+    lambdaAtEdge:
+      distribution: CloudFrontDistribution
+      eventType: origin-request
+
 resources:
   Description: ${self:service} - ${self:custom.stage}
 

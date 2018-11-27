@@ -1,4 +1,5 @@
 import { CloudFrontRequestHandler, CloudFrontResponseHandler, CloudFrontResponse } from 'aws-lambda';
+import { parse as parsePath } from 'path';
 
 const CACHE_FOREVER = 'public, max-age=31536000, immutable';
 
@@ -16,6 +17,24 @@ export const onViewerRequest: CloudFrontRequestHandler = async (event) => {
         location: [ { key: 'Location', value: `https://${rewrite}` } ]
       }
     };
+  }
+
+  return request;
+};
+
+export const onOriginRequest: CloudFrontRequestHandler = async (event) =>
+{
+  const { request } = event.Records[0].cf;
+  const { uri } = request;
+
+  // anything that is missing an extension, presume we are requesting the index
+  // file
+
+  const { ext } = parsePath(uri);
+
+  if (ext === '') {
+    console.log(`rewriting ${request.uri} to /index.html`);
+    request.uri = '/index.html';
   }
 
   return request;
