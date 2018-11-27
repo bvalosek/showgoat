@@ -33,7 +33,7 @@ export const onOriginRequest: CloudFrontRequestHandler = async (event) =>
   const { ext } = parsePath(uri);
 
   if (ext === '') {
-    console.log(`rewriting ${request.uri} to /index.html`);
+    console.log(`rewriting ${request.uri} -> /index.html`);
     request.uri = '/index.html';
   }
 

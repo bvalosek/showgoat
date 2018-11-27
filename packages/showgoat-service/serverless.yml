@@ -17,6 +17,8 @@ provider:
   runtime: nodejs8.10
   timeout: 5
   memorySize: 512
+  environment:
+    AWS_RESOURCE_PREFIX: ${self:custom.prefix}
   iamRoleStatements:
     - Effect: Allow
       Action: S3:*
@@ -26,6 +28,11 @@ package:
   individually: true
 
 functions:
+
+  scrape:
+    handler: src/lambda/scrape.scrape
+    events:
+      - schedule: rate(1 hour)
 
   apiStatus:
     handler: src/lambda/apiStatus.getStatus
