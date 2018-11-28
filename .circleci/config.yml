@@ -24,7 +24,7 @@ jobs:
           name: Bootstrap lerna
           command: npx lerna bootstrap
       - save_cache:
-          key: bootstrap-v1-{{ .Branch }}-{{ .Revision }}
+          key: bootstrap-v2-{{ .Branch }}-{{ .Revision }}
           paths:
             - .
 
