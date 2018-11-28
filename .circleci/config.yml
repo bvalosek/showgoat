@@ -7,11 +7,11 @@ _common:
     - image: circleci/python:3.7.1
   restore-bootstrap: &restore-bootstrap
     keys:
-      - bootstrap-v1-{{ .Branch }}-{{ .Revision }}
-      - bootstrap-v1-{{ .Branch }}
+      - bootstrap-v2-{{ .Branch }}-{{ .Revision }}
+      - bootstrap-v2-{{ .Branch }}
+      - bootstrap-v2
   attach-workspace: &attach-workspace
     at: .
-
 
 jobs:
 
