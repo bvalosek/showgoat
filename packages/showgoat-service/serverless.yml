@@ -223,6 +223,7 @@ resources:
 
     APIMapping:
       Type: AWS::ApiGateway::BasePathMapping
+      DependsOn: APIDomainName
       Condition: IsProd
       Properties:
         DomainName: api.showgoat.net
