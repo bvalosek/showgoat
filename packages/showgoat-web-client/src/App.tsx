@@ -6,6 +6,7 @@ import HomePage from './HomePage';
 import AnotherPage from './AnotherPage';
 import AsyncDataPage from './AsyncDataPage';
 import NotFoundPage from './NotFoundPage';
+import './App.css';
 
 export default () => (
   <>
