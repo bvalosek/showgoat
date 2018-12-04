@@ -98,10 +98,10 @@ resources:
 
     # circle CI user
 
-    CircleDeploymentUser:
+    CircleCIDeploymentUser:
       Type: AWS::IAM::User
       Properties:
-        UserName: ${self:custom.prefix}-circle-ci
+        Path: /${self:custom.prefix}/circle-ci/
         Policies:
           - PolicyName: inline-policy
             PolicyDocument:
