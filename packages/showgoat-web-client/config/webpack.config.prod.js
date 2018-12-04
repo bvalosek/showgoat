@@ -305,6 +305,14 @@ module.exports = {
                     },
                   },
                 ],
+                [
+                  'import',
+                  {
+                    libraryName: 'antd',
+                    libraryDirectory: 'es',
+                    style: 'css',
+                  },
+                ],
               ],
               cacheDirectory: true,
               // Save disk space when time isn't as important

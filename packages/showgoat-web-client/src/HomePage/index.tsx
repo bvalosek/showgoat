@@ -1,18 +1,16 @@
 import React from 'react';
 import useFetch from '../hooks/useFetch';
 import ShowCard from './ShowCard';
-import { Show } from '../../../showlist-austin-parser';
+import { GetShowsAPIResponse } from '../../../showgoat-common';
 import './index.css';
 
 export default () => {
-  const [data, loading, error] = useFetch('https://api.showgoat.net/shows');
+  const [data, loading, error] = useFetch<GetShowsAPIResponse>('https://api.showgoat.net/shows');
 
-  if (data) {
+  if (loading) {
     return (
-      <div className="shows">
-        {data.shows.map((show: Show): JSX.Element => (
-          <ShowCard {...show} />
-        ))}
+      <div>
+        Loading...
       </div>
     );
   }
@@ -26,8 +24,10 @@ export default () => {
   }
 
   return (
-    <div>
-      Loading...
+    <div className="shows">
+      {data && data.shows.map(show => (
+        <ShowCard {...show} />
+      ))}
     </div>
   );
 };

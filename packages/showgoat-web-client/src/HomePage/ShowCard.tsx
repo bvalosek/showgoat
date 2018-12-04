@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card } from 'antd';
-import { Show } from '../../../showlist-austin-parser';
+/* eslint-disable-next-line */
+import { Show } from '../show';
 import './ShowCard.css';
 
 export default function ShowCard(props: Show): JSX.Element {
