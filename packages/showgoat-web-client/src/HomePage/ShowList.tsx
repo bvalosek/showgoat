@@ -10,7 +10,7 @@ export default function ShowList(props: GetShowsAPIResponse): JSX.Element {
     <List
       itemLayout="horizontal"
       dataSource={shows}
-      renderItem={(item: Show): JSX.Element => (
+      renderItem={(item: Show) => (
         <List.Item>
           <List.Item.Meta
             title={item.name}
